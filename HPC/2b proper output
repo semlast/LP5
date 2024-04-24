@@ -63,3 +63,22 @@ int main() {
     std::cout << std::endl;
     return 0;
 }
+
+
+output:
+Enter total no. of elements:
+5
+Enter 5 elements:
+5
+6
+4
+3
+8
+Sorted Elements as follows:
+3 4 5 6 8 
+
+
+
+output input:
+enter total number of elements : 9
+enter 9 elements : 1 7 8 9 5 6 4 6 2
