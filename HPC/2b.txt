@@ -1,3 +1,10 @@
+for running in terminal:
+pwd
+cd Desktop/
+touch in.cpp
+g++ -o in in.cpp -fopenmp
+./in
+
 #include<stdio.h>
 #include<omp.h>
 
