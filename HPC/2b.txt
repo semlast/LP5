@@ -1,60 +1,83 @@
-#include <iostream>
-#include <omp.h>
+#include<stdio.h>
+#include<omp.h>
 
-void bubble(int *, int);
-void swap(int &, int &);
+void merge(int array[], int low, int mid, int high) {
+    int temp[30];
+    int i = low, j = mid + 1, k = low;
 
-void bubble(int *a, int n) {
-    bool swapped;
-    for (int i = 0; i < n - 1; i++) {
-        swapped = false;
-#pragma omp parallel for shared(a, n, swapped)
-        for (int j = 0; j < n - i - 1; j++) {
-            if (a[j] > a[j + 1]) {
-#pragma omp critical
-                {
-                    swap(a[j], a[j + 1]);
-                    swapped = true;
-                }
-            }
+    while (i <= mid && j <= high) {
+        if (array[i] <= array[j]) {
+            temp[k++] = array[i++];
+        } else {
+            temp[k++] = array[j++];
         }
-        if (!swapped)
-            break; // Array is already sorted
+    }
+
+    while (i <= mid) {
+        temp[k++] = array[i++];
+    }
+
+    while (j <= high) {
+        temp[k++] = array[j++];
+    }
+
+    for (i = low; i <= high; i++) {
+        array[i] = temp[i];
     }
 }
 
-void swap(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
+void mergesort(int array[], int low, int high) {
+    int mid;
+
+    if (low < high) {
+        mid = (low + high) / 2;
+        #pragma omp parallel sections num_threads(2)
+        {
+            #pragma omp section
+            {
+                mergesort(array, low, mid);
+            }
+            #pragma omp section
+            {
+                mergesort(array, mid + 1, high);
+            }
+        }
+        merge(array, low, mid, high);
+    }
 }
 
 int main() {
-    int *a, n;
-    std::cout << "Enter total number of elements: ";
-    std::cin >> n;
-    a = new int[n];
-    std::cout << "Enter elements: ";
-    for (int i = 0; i < n; i++) {
-        std::cin >> a[i];
+    int array[50];
+    int i, size;
+    printf("Enter total no. of elements:\n");
+    scanf("%d", &size);
+    printf("Enter %d elements:\n", size);
+    for (i = 0; i < size; i++) {
+        scanf("%d", &array[i]);
     }
-    bubble(a, n);
-    std::cout << "Sorted array: ";
-    for (int i = 0; i < n; i++) {
-        std::cout << a[i] << " ";
+    mergesort(array, 0, size - 1);
+    printf("Sorted Elements as follows:\n");
+    for (i = 0; i < size; i++) {
+        printf("%d ", array[i]);
     }
-    std::cout << std::endl;
-    delete[] a; // Deallocate memory
+    printf("\n");
     return 0;
 }
 
 output:
-Enter total number of elements: 9
-Enter elements: 1 2 3 4 5 69 8 5 6
-Sorted array: 1 2 3 4 5 5 6 8 69 
+Enter total no. of elements:
+5
+Enter 5 elements:
+5
+6
+4
+3
+8
+Sorted Elements as follows:
+3 4 5 6 8 
 
 
 
 output input:
-enter total number of elements : 10
-enter elements : 11 10 2 5 4 3 8 9 7 1
+enter total number of elements : 9
+enter 9 elements : 1 7 8 9 5 6 4 6 2
