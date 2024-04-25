@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+// A simple graph representation using adjacency lists
+class Graph {
+    int V; // Number of vertices
+
+    // Pointer to an array containing adjacency lists
+    vector<int> *adj;
+
+public:
+    Graph(int V); // Constructor
+
+    // Function to add an edge to the graph
+    void addEdge(int v, int w);
+
+    // DFS traversal of the vertices reachable from a given vertex
+    void DFS(int v);
+};
+
+Graph::Graph(int V) {
+    this->V = V;
+    adj = new vector<int>[V];
+}
+
+void Graph::addEdge(int v, int w) {
+    adj[v].push_back(w); // Add w to v’s list
+}
+
+void Graph::DFS(int v) {
+    // Mark all the vertices as not visited
+    vector<bool> visited(V, false);
+
+    // Create a stack for DFS
+    stack<int> stack;
+
+    // Push the current source node
+    stack.push(v);
+
+    while (!stack.empty()) {
+        // Pop a vertex from stack and print it
+        v = stack.top();
+        stack.pop();
+
+        // Stack may contain the same vertex twice, so we need to check if it's visited
+        if (!visited[v]) {
+            cout << v << " ";
+            visited[v] = true;
+
+            // Get all adjacent vertices of the popped vertex v
+            // If an adjacent has not been visited, then push it to the stack
+            for (auto i = adj[v].begin(); i != adj[v].end(); ++i)
+                if (!visited[*i])
+                    stack.push(*i);
+        }
+    }
+}
+
+int main() {
+    // Create a graph given in the example
+    Graph g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+
+    cout << "Depth First Traversal: ";
+    g.DFS(2); // Start DFS from vertex 2
+    cout << endl;
+
+    return 0;
+}
