@@ -6,17 +6,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-import io
 
-# Upload the train and test data
-from google.colab import files
-uploaded = files.upload()
-
-# Load the train data
-df_train = pd.read_csv(io.BytesIO(uploaded['fashion-mnist_train.csv']))
-
-# Load the test data
-df_test = pd.read_csv(io.BytesIO(uploaded['fashion-mnist_test.csv']))
+# Load the train and test data
+df_train = pd.read_csv("fashion-mnist_train.csv")
+df_test = pd.read_csv("fashion-mnist_test.csv")
 
 # Preprocess the data
 X_train = df_train.drop('label', axis=1).values.reshape(-1, 28, 28, 1) / 255.0
@@ -45,7 +38,7 @@ model.compile(optimizer='adam',
 model.summary()
 
 # Train the model
-history = model.fit(X_test, y_test, epochs=10, batch_size=128, validation_data=(X_test, y_test))
+history = model.fit(X_train, y_train, epochs=10, batch_size=128, validation_data=(X_test, y_test))
 
 # Evaluate the model
 test_loss, test_acc = model.evaluate(X_test, y_test)
