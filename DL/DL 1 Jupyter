@@ -50,7 +50,7 @@ X_test = sc.transform(X_test)
 
 # Model Building
 model = Sequential()
-model.add(Dense(128, activation='relu', input_dim=13))  # Input_dim should be the number of features
+model.add(Dense(128, activation='relu', input_dim=14))  # Input_dim should be the number of features
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(16, activation='relu'))
